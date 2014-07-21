@@ -70,10 +70,13 @@ rm(df_subj, df_xtrain, df_ytrain)
 ##1.Merges the training and the test sets to create one data set.
 df_merge = rbind(df_test, df_train)
 
+#cleanup
+rm(df_test, df_train)
+
 #extract columns that are mean and std only. Only names having  -mean() and -std()
 colNames = colnames(df_merge)
-col_Mean = grep("-mean()", colNames, ignore.case = FALSE) #all columns that are means
-col_Std = grep("-std()", colNames, ignore.case = FALSE) #all columns that are std
+col_Mean = grep("-mean()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are means
+col_Std = grep("-std()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are std
 
 ##2.Extracts only the measurements on the mean and standard deviation for each measurement.
 df_mergems = df_merge[,c(1,2, col_Mean, col_Std)]
@@ -85,5 +88,8 @@ df_mergems$Activity.Label <- factor(df_mergems$Activity.Label)
 df_tidy = ddply(df_mergems, .(VolID, Activity.Label), numcolwise(mean))
 summary(df_tidy)
 
-#create a txt file to upload
+#create a txt file to upload tidydataset
 write.table(df_tidy, file = "tidydataset.txt", sep="\t")
+
+#create a txt file to upload tidydataset column names for code book
+write.table(colnames(df_tidy), file = "codebook.txt", sep="\t")
