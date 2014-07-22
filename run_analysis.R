@@ -32,13 +32,13 @@ colnames(df_xtest) <- df_Features$FtrLabel
 #read y test
 ##3.Uses descriptive activity names to name the activities in the data set
 df_ytest <- read.table("./test/y_test.txt", sep = "", header = FALSE)
-colnames(df_ytest) = c("ActID")
-df_ytest$rownum = seq(1:length(df_ytest$ActID)) #merge distorts data. use this variable to reset
-df_ytest = merge(df_ytest, df_ActLbl, by.x= "ActID", by.y = "ActID", all = FALSE)
-df_ytest = arrange(df_ytest, rownum) #put it back the original order
+colnames(df_ytest) <- c("ActID")
+df_ytest$rownum <- seq(1:length(df_ytest$ActID)) #merge distorts data. use this variable to reset
+df_ytest <- merge(df_ytest, df_ActLbl, by.x= "ActID", by.y = "ActID", all = FALSE)
+df_ytest <- arrange(df_ytest, rownum) #put it back the original order
 
 #merge df to create the test data
-df_test = cbind(df_subj, "Activity.Label"= df_ytest$ActLabel, df_xtest)
+df_test <- cbind(df_subj, "Activity.Label"= df_ytest$ActLabel, df_xtest)
 
 #cleanup
 rm(df_subj, df_xtest, df_ytest)
@@ -56,36 +56,36 @@ colnames(df_xtrain) <- df_Features$FtrLabel
 #read y train
 ##3.Uses descriptive activity names to name the activities in the data set
 df_ytrain <- read.table("./train/y_train.txt", sep = "", header = FALSE)
-colnames(df_ytrain) = c("ActID")
-df_ytrain$rownum = seq(1:length(df_ytrain$ActID)) #merge distorts data. use this variable to reset
-df_ytrain = merge(df_ytrain, df_ActLbl, by.x= "ActID", by.y = "ActID", all = FALSE)
-df_ytrain = arrange(df_ytrain, rownum) #put it back the original order
+colnames(df_ytrain) <- c("ActID")
+df_ytrain$rownum <- seq(1:length(df_ytrain$ActID)) #merge distorts data. use this variable to reset
+df_ytrain <- merge(df_ytrain, df_ActLbl, by.x= "ActID", by.y = "ActID", all = FALSE)
+df_ytrain <- arrange(df_ytrain, rownum) #put it back the original order
 
 #merge df to create the train data
-df_train = cbind(df_subj, "Activity.Label"= df_ytrain$ActLabel, df_xtrain)
+df_train <- cbind(df_subj, "Activity.Label"= df_ytrain$ActLabel, df_xtrain)
 
 #cleanup
 rm(df_subj, df_xtrain, df_ytrain)
 
 ##1.Merges the training and the test sets to create one data set.
-df_merge = rbind(df_test, df_train)
+df_merge <- rbind(df_test, df_train)
 
 #cleanup
 rm(df_test, df_train)
 
 #extract columns that are mean and std only. Only names having  -mean() and -std()
-colNames = colnames(df_merge)
-col_Mean = grep("-mean()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are means
-col_Std = grep("-std()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are std
+colNames <- colnames(df_merge)
+col_Mean <- grep("-mean()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are means
+col_Std <- grep("-std()", colNames, ignore.case = FALSE, fixed = TRUE) #all columns that are std
 
 ##2.Extracts only the measurements on the mean and standard deviation for each measurement.
-df_mergems = df_merge[,c(1,2, col_Mean, col_Std)]
+df_mergems <- df_merge[,c(1,2, col_Mean, col_Std)]
 
 
 df_mergems$Activity.Label <- factor(df_mergems$Activity.Label)
 
 ##5.Creates a second, independent tidy data set with the average of each variable for each activity and each subject.  
-df_tidy = ddply(df_mergems, .(VolID, Activity.Label), numcolwise(mean))
+df_tidy <- ddply(df_mergems, .(VolID, Activity.Label), numcolwise(mean))
 summary(df_tidy)
 
 #create a txt file to upload tidydataset
@@ -93,3 +93,4 @@ write.table(df_tidy, file = "tidydataset.txt", sep="\t")
 
 #create a txt file to upload tidydataset column names for code book
 write.table(colnames(df_tidy), file = "codebook.txt", sep="\t")
+
